@@ -5,14 +5,16 @@
 
 
 pragma solidity ^0.4.15;
+
 import "./Arbitrator.sol";
+import "./IArbitrable.sol";
 
 /** @title Multiple Arbitrable Transaction
  *  This is a a contract for multiple arbitrated transactions which can be reversed by an arbitrator.
  *  This can be used for buying goods, services and for paying freelancers.
  *  Parties are identified as "seller" and "buyer".
  */
-contract MultipleArbitrableTransaction {
+contract MultipleArbitrableTransaction is IArbitrable {
 
     // **************************** //
     // *    Contract variables    * //
@@ -64,27 +66,6 @@ contract MultipleArbitrableTransaction {
      *  @param _ruling The ruling which was given.
      */
     event Ruling(uint indexed _transactionId, Arbitrator indexed _arbitrator, uint indexed _disputeID, uint _ruling);
-
-    /** @dev To be emmited when meta-evidence is submitted.
-     *  @param _metaEvidenceID Unique identifier of meta-evidence. Should be the transactionId.
-     *  @param _evidence A link to the meta-evidence JSON.
-     */
-    event MetaEvidence(uint indexed _metaEvidenceID, string _evidence);
-
-    /** @dev To be emmited when a dispute is created to link the correct meta-evidence to the disputeID.
-     *  @param _arbitrator The arbitrator of the contract.
-     *  @param _disputeID ID of the dispute in the Arbitrator contract.
-     *  @param _metaEvidenceID Unique identifier of meta-evidence. Should be the transactionId.
-     */
-    event Dispute(Arbitrator indexed _arbitrator, uint indexed _disputeID, uint _metaEvidenceID);
-
-    /** @dev To be raised when evidence are submitted. Should point to the ressource (evidences are not to be stored on chain due to gas considerations).
-     *  @param _arbitrator The arbitrator of the contract.
-     *  @param _disputeID ID of the dispute in the Arbitrator contract.
-     *  @param _party The address of the party submiting the evidence. Note that 0 is kept for evidences not submitted by any party.
-     *  @param _evidence A link to evidence or if it is short the evidence itself. Can be web link ("http://X"), IPFS ("ipfs:/X") or another storing service (using the URI, see https://en.wikipedia.org/wiki/Uniform_Resource_Identifier ). One usecase of short evidence is to include the hash of the plain English contract.
-     */
-    event Evidence(Arbitrator indexed _arbitrator, uint indexed _disputeID, address _party, string _evidence);
 
     /** @dev Indicate that a party has to pay a fee or would otherwise be considered as loosing.
      *  @param _transactionId The index of the transaction.
